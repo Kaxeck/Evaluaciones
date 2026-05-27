@@ -5,43 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title', 'Sistema de Evaluacion')</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/53c524d9a6.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-        <div class="container-fluid">
-            <a class="navbar-brand p-2" href="#"><i class="fa-solid fa-graduation-cap"></i></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('inicio') ? 'active' : '' }}" href="{{ route('inicio') }}">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('centros') ? 'active' : '' }}" href="{{ route('centros') }}">Centros</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('alumnos') ? 'active' : '' }}" href="{{ route('alumnos') }}">Alumnos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('calificaciones') ? 'active' : '' }}" href="{{ route('calificaciones') }}">Calificaciones</a>
-                    </li>
+    <!-- Estructura principal con sidebar fijo y contenido dinámico -->
+    <div class="d-flex" style="min-height: 100vh;">
+        
+        <!-- Sidebar fijo con navegación -->
+        <div class="sidebar-fijo d-flex flex-column flex-shrink-0 p-3 bg-light shadow-sm">
+            <a href="{{ route('inicio') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none px-2">
+                <span class="brand-badge-sidebar me-2">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </span>
+                <span class="fs-6 fw-bold brand-text-sidebar">Sistema de Evaluación</span>
+            </a>
+            <hr>
+            <!-- Navegación del sidebar con íconos personalizados -->
+            <ul class="nav nav-pills flex-column mb-auto sidebar-sections gap-1">
+                <li class="nav-item">
+                    <a href="{{ route('inicio') }}" class="nav-link {{ request()->routeIs('inicio') ? 'active' : 'link-dark' }}">
+                        <span class="sidebar-icon-circle">
+                            <i class="fa-solid fa-house"></i>
+                        </span>
+                        Inicio
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('centros') }}" class="nav-link {{ request()->routeIs('centros') ? 'active' : 'link-dark' }}">
+                        <span class="sidebar-icon-circle">
+                            <img src="{{ asset('centros.png') }}" alt="Centros" class="img-fluid">
+                        </span>
+                        Centros
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('alumnos') }}" class="nav-link {{ request()->routeIs('alumnos') ? 'active' : 'link-dark' }}">
+                        <span class="sidebar-icon-circle">
+                            <img src="{{ asset('alumnos.png') }}" alt="Alumnos" class="img-fluid">
+                        </span>
+                        Alumnos
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('calificaciones') }}" class="nav-link {{ request()->routeIs('calificaciones') ? 'active' : 'link-dark' }}">
+                        <span class="sidebar-icon-circle">
+                            <img src="{{ asset('calificaciones.png') }}" alt="Calificaciones" class="img-fluid">
+                        </span>
+                        Calificaciones
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <!-- Dropdown de usuario en el sidebar -->
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle px-2" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                    <strong>Usuario</strong>
+                </a>
+                <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser">
+                    <li><a class="dropdown-item" href="#">Nuevo proyecto...</a></li>
+                    <li><a class="dropdown-item" href="#">Ajustes</a></li>
+                    <li><a class="dropdown-item" href="#">Perfil</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Salir</a></li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2 bg-white text-black border-0" type="search" placeholder="Buscar" aria-label="Search" />
-                    <button class="btn btn-outline-light" type="submit">Buscar</button>
-                </form>
             </div>
         </div>
-    </nav>
+        <!-- Contenido principal con navbar y sección dinámica -->
+        <div class="main-wrapper d-flex flex-column flex-fill">
+            
+            <nav class="navbar navbar-expand-lg navbar-dark app-navbar py-3 sticky-top">
+                <div class="container-fluid px-lg-4 d-flex justify-content-end">
+                    <form class="d-flex nav-search" role="search" style="width: 100%; max-width: 400px;">
+                        <input class="form-control bg-white text-black me-2" type="search" placeholder="Buscar..." aria-label="Search" />
+                        <button class="btn btn-light fw-semibold px-3" type="submit">Buscar</button>
+                    </form>
+                </div>
+            </nav>
 
-    <main class="container py-5">
-        @yield('content')
-    </main>
+            <main class="container py-5 flex-fill">
+                @yield('content')
+            </main>
+        </div>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 </html>
