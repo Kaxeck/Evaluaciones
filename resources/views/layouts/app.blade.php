@@ -14,7 +14,7 @@
     <div class="d-flex" style="min-height: 100vh;">
         
         <!-- Sidebar fijo con navegación -->
-        <div class="sidebar-fijo d-flex flex-column flex-shrink-0 p-3 bg-light shadow-sm">
+        <div id="sidebar" class="sidebar-fijo d-flex flex-column flex-shrink-0 p-3 bg-light shadow-sm">
             <a href="{{ route('inicio') }}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none px-2">
                 <span class="brand-badge-sidebar me-2">
                     <i class="fa-solid fa-graduation-cap"></i>
@@ -73,11 +73,16 @@
                 </ul>
             </div>
         </div>
+        <div class="sidebar-backdrop" data-sidebar-backdrop></div>
         <!-- Contenido principal con navbar y sección dinámica -->
         <div class="main-wrapper d-flex flex-column flex-fill">
             
             <nav class="navbar navbar-expand-lg navbar-dark app-navbar py-3 sticky-top">
-                <div class="container-fluid px-lg-4 d-flex justify-content-end">
+                <div class="container-fluid px-lg-4 d-flex align-items-center justify-content-between gap-3">
+                    <button class="btn btn-light sidebar-toggle-btn d-lg-none" type="button" aria-controls="sidebar" aria-expanded="false" data-sidebar-toggle>
+                        <i class="fa-solid fa-bars"></i>
+                        <span class="ms-2">Menú</span>
+                    </button>
                     <form class="d-flex nav-search" role="search" style="width: 100%; max-width: 400px;" onsubmit="return false;">
                             <input id="global-search-input" name="q" class="form-control bg-white text-black me-2" type="search" placeholder="Buscar..." aria-label="Search" autocomplete="off" />
                             <button id="global-search-btn" class="btn btn-light fw-semibold px-3" type="button">Buscar</button>

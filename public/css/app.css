@@ -29,12 +29,32 @@
     left: 0;
     z-index: 1040;
     overflow-y: auto; /* Permite scroll interno si hay muchos elementos */
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 /* Main content wrapper */
 .main-wrapper {
     margin-left: 280px; /* Compensa el ancho del sidebar fijo */
     width: calc(100% - 280px);
+}
+
+.sidebar-toggle-btn {
+    border: 0;
+    white-space: nowrap;
+}
+
+.sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 1035;
+}
+
+body.sidebar-open {
+    overflow: hidden;
 }
 
 /* Sidebar Branding & Icons */
@@ -94,19 +114,24 @@
 
 /* Ajustes responsivos */
 @media (max-width: 991.98px) {
-    /* Si decides hacerlo responsivo en móvil, puedes ocultar el sidebar o achicarlo aquí */
     .sidebar-fijo {
-        width: 70px;
+        width: 280px;
+        transform: translateX(-100%);
+        z-index: 1045;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
     }
-    .brand-text-sidebar,
-    .sidebar-sections .nav-link span:not(.sidebar-icon-circle) {
-        display: none; /* Oculta el texto, deja solo iconos */
+
+    body.sidebar-open .sidebar-fijo {
+        transform: translateX(0);
     }
+
+    body.sidebar-open .sidebar-backdrop {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
     .main-wrapper {
-        margin-left: 70px;
-        width: calc(100% - 70px);
-    }
-    .sidebar-icon-circle {
-        margin-right: 0;
+        margin-left: 0;
+        width: 100%;
     }
 }

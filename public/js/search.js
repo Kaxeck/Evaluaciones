@@ -79,3 +79,48 @@
         }
     });
 })();
+
+// Sidebar mobile toggle: opens the fixed sidebar as an off-canvas panel on small screens.
+(function () {
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleButton = document.querySelector('[data-sidebar-toggle]');
+        const backdrop = document.querySelector('[data-sidebar-backdrop]');
+        const sidebar = document.querySelector('.sidebar-fijo');
+
+        if (!toggleButton || !backdrop || !sidebar) return;
+
+        const closeSidebar = () => {
+            document.body.classList.remove('sidebar-open');
+            toggleButton.setAttribute('aria-expanded', 'false');
+        };
+
+        const openSidebar = () => {
+            document.body.classList.add('sidebar-open');
+            toggleButton.setAttribute('aria-expanded', 'true');
+        };
+
+        toggleButton.addEventListener('click', () => {
+            if (document.body.classList.contains('sidebar-open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+
+        backdrop.addEventListener('click', closeSidebar);
+
+        sidebar.querySelectorAll('a.nav-link, .dropdown-item').forEach((element) => {
+            element.addEventListener('click', () => {
+                if (window.innerWidth <= 991.98) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 991.98) {
+                closeSidebar();
+            }
+        });
+    });
+})();
