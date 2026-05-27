@@ -78,10 +78,10 @@
             
             <nav class="navbar navbar-expand-lg navbar-dark app-navbar py-3 sticky-top">
                 <div class="container-fluid px-lg-4 d-flex justify-content-end">
-                    <form class="d-flex nav-search" role="search" style="width: 100%; max-width: 400px;">
-                        <input class="form-control bg-white text-black me-2" type="search" placeholder="Buscar..." aria-label="Search" />
-                        <button class="btn btn-light fw-semibold px-3" type="submit">Buscar</button>
-                    </form>
+                    <form class="d-flex nav-search" role="search" style="width: 100%; max-width: 400px;" onsubmit="return false;">
+                            <input id="global-search-input" name="q" class="form-control bg-white text-black me-2" type="search" placeholder="Buscar..." aria-label="Search" autocomplete="off" />
+                            <button id="global-search-btn" class="btn btn-light fw-semibold px-3" type="button">Buscar</button>
+                        </form>
                 </div>
             </nav>
 
@@ -92,5 +92,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/search.js') }}"></script>
 </body>
 </html>
