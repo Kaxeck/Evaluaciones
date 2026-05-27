@@ -12,9 +12,16 @@
                 <p class="mb-0 text-white-50">Gestion de la base de datos de estudiantes.</p>
             </div>
             <div class="col-lg-4 text-lg-end">
-                <button class="btn btn-light btn-lg px-4" data-bs-toggle="modal" data-bs-target="#modalregistar">
-                    <i class="fa-solid fa-user-plus me-2"></i>Añadir Alumno
-                </button>
+                <div>
+                    <button class="btn btn-light btn-lg px-4" data-bs-toggle="modal" data-bs-target="#modalregistar">
+                        <i class="fa-solid fa-user-plus me-2"></i>Añadir Alumno
+                    </button>
+                </div>
+                <div class="mt-2">
+                    <button class="btn btn-outline-light btn-sm px-4" data-bs-toggle="modal" data-bs-target="#modalimportar">
+                        <i class="fa-solid fa-file-import me-2"></i>Importar
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -47,6 +54,32 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+
+    <!-- Modal para importar alumnos -->
+    <div class="modal fade" id="modalimportar" tabindex="-1" aria-labelledby="modalimportarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h1 class="modal-title fs-5" id="modalimportarLabel">Importar alumnos</h1>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form action="{{ route('alumnos.import') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="form-label">Seleccionar archivo Excel</label>
+                            <input type="file" name="file" class="form-control" accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                        </div>
+                        <div class="text-muted small mb-3">Formato esperado en Excel: Matrícula, Telebachillerato, Estatus Alumno, Nombre, Paterno, Materno, Género, Generación, Municipio Residencia, País Nacimiento y Fecha Nacimiento.</div>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Importar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         var res = function() {

@@ -26,6 +26,7 @@ Route::get('/alumnos', [AlumnoController::class, 'index'])->name('alumnos');
 Route::post('/alumnos/create', [AlumnoController::class, 'store'])->name('alumnos.store');
 Route::post('/alumnos/update', [AlumnoController::class, 'update'])->name('alumnos.update');
 Route::get('/alumnos/delete/{id}', [AlumnoController::class, 'destroy'])->name('alumnos.destroy');
+Route::post('/alumnos/import', [AlumnoController::class, 'import'])->name('alumnos.import');
 
 // Rutas para CRUD de calificaciones
 Route::get('/calificaciones', [CalificacionController::class, 'index'])->name('calificaciones');

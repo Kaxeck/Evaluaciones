@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AlumnoImportService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+// Controlador para gestionar las operaciones relacionadas con los alumnos
 class AlumnoController extends Controller
 {
     // Función para mostrar los registros
@@ -116,5 +118,35 @@ class AlumnoController extends Controller
         }
 
         return back()->with('error', 'Error al eliminar el alumno');
+    }
+
+    // Función para importar alumnos desde un archivo
+    public function import(Request $request, AlumnoImportService $importService)
+    {
+        try {
+            if (!$request->hasFile('file')) {
+                return back()->with('error', 'No se seleccionó ningún archivo');
+            }
+
+            $result = $importService->import($request->file('file'));
+
+            $parts = ["{$result['importados']} exitoso(s)"];
+
+            if ($result['duplicados'] > 0) {
+                $parts[] = "{$result['duplicados']} duplicado(s) ignorado(s)";
+            }
+
+            if ($result['sin_centro'] > 0) {
+                $parts[] = "{$result['sin_centro']} sin centro coincidente";
+            }
+
+            if ($result['fallidos'] > 0) {
+                $parts[] = "{$result['fallidos']} fallido(s)";
+            }
+
+            return back()->with('success', 'Importación completada: ' . implode(', ', $parts));
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Error al subir el archivo: ' . $th->getMessage());
+        }
     }
 }
