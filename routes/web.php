@@ -4,6 +4,7 @@ use App\Http\Controllers\AlumnoController;
 use App\Http\Controllers\CalificacionController;
 use App\Http\Controllers\CentroController;
 use App\Http\Controllers\CrudController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 // Rutas para la aplicación
@@ -16,7 +17,7 @@ Route::post('/centros/update', [CentroController::class, 'update'])->name('centr
 Route::get('/centros/delete/{id}', [CentroController::class, 'destroy'])->name('centros.destroy');
 
 // Ruta de inicio (página principal)
-Route::view('/inicio', 'inicio')->name('inicio');
+Route::get('/inicio', [HomeController::class, 'index'])->name('inicio');
 
 // Ruta para importación de centros (desde modal)
 Route::post('/centros/import', [CentroController::class, 'import'])->name('centros.import');

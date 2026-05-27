@@ -42,6 +42,8 @@
         </div>
     @endif
 
+    <div id="calificacion-alerts"></div>
+
     <script>
         var res = function() {
             var not = confirm("¿Desea eliminar esta calificación?");
@@ -58,7 +60,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <form action="{{ route('calificaciones.store') }}" method="POST">
+                    <form action="{{ route('calificaciones.store') }}" method="POST" data-calificacion-form>
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -81,19 +83,19 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Parcial 1</label>
-                                <input type="number" step="0.01" class="form-control" name="txtparcial1">
+                                <input type="number" step="0.01" min="0" class="form-control parcial-input" name="txtparcial1" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Parcial 2</label>
-                                <input type="number" step="0.01" class="form-control" name="txtparcial2">
+                                <input type="number" step="0.01" min="0" class="form-control parcial-input" name="txtparcial2" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Parcial 3</label>
-                                <input type="number" step="0.01" class="form-control" name="txtparcial3">
+                                <input type="number" step="0.01" min="0" class="form-control parcial-input" name="txtparcial3" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Promedio</label>
-                                <input type="text" class="form-control" value="Se calcula automáticamente" readonly>
+                                <input type="text" class="form-control promedio-output" value="" readonly>
                             </div>
                         </div>
                         <div class="d-flex justify-content-end gap-2 mt-4">
@@ -159,7 +161,7 @@
                                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body p-4">
-                                        <form action="{{ route('calificaciones.update') }}" method="POST">
+                                        <form action="{{ route('calificaciones.update') }}" method="POST" data-calificacion-form>
                                             @csrf
                                             <div class="row g-3">
                                                 <div class="col-md-4">
@@ -184,19 +186,19 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Parcial 1</label>
-                                                    <input type="number" step="0.01" class="form-control" name="txtparcial1" value="{{ $item->parcial1 }}">
+                                                    <input type="number" step="0.01" min="0" class="form-control parcial-input" name="txtparcial1" value="{{ $item->parcial1 }}" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Parcial 2</label>
-                                                    <input type="number" step="0.01" class="form-control" name="txtparcial2" value="{{ $item->parcial2 }}">
+                                                    <input type="number" step="0.01" min="0" class="form-control parcial-input" name="txtparcial2" value="{{ $item->parcial2 }}" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Parcial 3</label>
-                                                    <input type="number" step="0.01" class="form-control" name="txtparcial3" value="{{ $item->parcial3 }}">
+                                                    <input type="number" step="0.01" min="0" class="form-control parcial-input" name="txtparcial3" value="{{ $item->parcial3 }}" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Promedio</label>
-                                                    <input type="text" class="form-control" value="{{ $item->promedio }}" readonly>
+                                                    <input type="text" class="form-control promedio-output" value="{{ $item->promedio }}" readonly>
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-end gap-2 mt-4">
@@ -238,6 +240,82 @@
             </div>
         </div>
     </div>
+
+    <script>
+        (function () {
+            const alertsContainer = document.getElementById('calificacion-alerts');
+
+            function showAlert(type, message) {
+                if (!alertsContainer) {
+                    return;
+                }
+
+                alertsContainer.innerHTML = `
+                    <div class="alert alert-${type} alert-dismissible fade show shadow-sm mt-3" role="alert">
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `;
+            }
+
+            function calculateAverage(form) {
+                const inputs = Array.from(form.querySelectorAll('.parcial-input'));
+                const output = form.querySelector('.promedio-output');
+                const values = inputs
+                    .map((input) => parseFloat(input.value))
+                    .filter((value) => !Number.isNaN(value));
+
+                if (!output) {
+                    return;
+                }
+
+                if (values.length === 0) {
+                    output.value = '';
+                    return;
+                }
+
+                const average = values.reduce((sum, value) => sum + value, 0) / values.length;
+                output.value = average.toFixed(2);
+            }
+
+            document.querySelectorAll('form[data-calificacion-form]').forEach((form) => {
+                const inputs = form.querySelectorAll('.parcial-input');
+
+                inputs.forEach((input) => {
+                    input.addEventListener('input', () => calculateAverage(form));
+                });
+
+                calculateAverage(form);
+
+                form.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value,
+                        },
+                    });
+
+                    const payload = await response.json().catch(() => ({}));
+
+                    if (!response.ok) {
+                        const message = payload.errors
+                            ? Object.values(payload.errors).flat()[0]
+                            : (payload.message || 'No se pudo guardar la calificación.');
+                        showAlert('danger', message);
+                        return;
+                    }
+
+                    showAlert('success', payload.message || 'Operación realizada correctamente.');
+                    setTimeout(() => window.location.reload(), 700);
+                });
+            });
+        })();
+    </script>
 </section>
 @endsection
 
